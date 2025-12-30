@@ -1,0 +1,17 @@
+backbone: 'dinov2_vitg14'
+dataset:
+  name: 'caltech-imagenet'
+  source: 'caltech'
+  target: 'imagenet'
+train:
+  batch: 512
+  device: 'cuda'
+  learning_rate: 1e-1
+  epochs: 15
+  class_increment: 10
+  imbalance_factor: 1.0
+eval:
+  batch: 512
+  device: 'cuda'
+preprocess:
+  batch: 128

@@ -1,0 +1,40 @@
+office-home:
+  path: '/media/Arquivos/general/datasets/office-home'
+  remap: 'features/office-home/remap.json'
+  features: 'features/office-home'
+  n_classes: 65
+  image_size: 224
+  domains:
+    - art
+    - clipart
+    - product
+    - real_world
+office-31:
+  path: '/media/gabriel/Arquivos/general/datasets/office-31'
+  features: 'features/office-31'
+  n_classes: 31
+  image_size: 224
+  domains:
+    - Amazon
+    - DSLR
+    - Webcam
+caltech-imagenet:
+  path: '/media/gabriel/Arquivos/general/datasets/caltech_imagenet'
+  features: 'features/caltech-imagenet'
+  n_classes: 84
+  image_size: 224
+  domains:
+    - imagenet
+    - caltech
+  increments:
+    # caltech is reference, we can use [i * 10, (i+1) * 10]
+    # where i is increment number
+    # ids from imagenet
+    1: [7, 23, 28, 29, 31, 32, 33, 34, 35, 36]
+    2: [10, 18, 27, 37, 38, 39, 40, 41, 56, 76]
+    3: [0, 9, 26, 42, 43, 44, 45, 46, 47, 67]
+    4: [8, 16, 17, 30, 48, 49, 50, 74, 81, 82]
+    5: [3, 13, 15, 24, 51, 52, 54, 55, 57, 80]
+    6: [1, 2, 12, 19, 21, 58, 60, 61, 62, 83]
+    7: [6, 11, 20, 25, 53, 63, 64, 65, 66, 78]
+    8: [4, 5, 68, 69, 70, 71, 72, 73, 75, 79]
