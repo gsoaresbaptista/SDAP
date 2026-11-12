@@ -1,0 +1,21 @@
+# Per-task final accuracy (%) reported in the original ProCA [Lin et al., 2022] and PLDCA papers.
+# Copied from experiments/graficos/notebooks/hypothesis_tests.ipynb (cell 21, ORIGINAL_ARTICLE_RESULTS).
+dataset,task,proca_original,pldca_original
+Office-Home,Ar->Cl,51.9,62.9
+Office-Home,Ar->Pr,75.2,80.8
+Office-Home,Ar->Rw,86.1,86.8
+Office-Home,Cl->Ar,60.8,66.9
+Office-Home,Cl->Pr,69.7,75.0
+Office-Home,Cl->Rw,74.7,82.2
+Office-Home,Pr->Ar,60.1,68.9
+Office-Home,Pr->Cl,51.0,58.8
+Office-Home,Pr->Rw,84.2,86.3
+Office-Home,Rw->Ar,75.8,78.4
+Office-Home,Rw->Cl,51.2,59.6
+Office-Home,Rw->Pr,86.4,89.2
+Office-31,A->D,81.8,90.1
+Office-31,A->W,82.5,86.2
+Office-31,D->A,65.2,72.4
+Office-31,D->W,99.1,98.4
+Office-31,W->A,64.1,73.9
+Office-31,W->D,99.6,99.0

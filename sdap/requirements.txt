@@ -1,0 +1,11 @@
+# Packages imported by the SDAP code. The exact versions of the original runs were not recorded.
+# DINOv2 (dinov2_vitg14_reg) is loaded through torch.hub (facebookresearch/dinov2) in models/feature_matrix.py.
+torch
+torchvision
+numpy
+scipy
+scikit-learn
+pyyaml
+tqdm
+matplotlib
+seaborn

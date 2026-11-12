@@ -1,5 +1,5 @@
 office-home:
-  path: '/media/Arquivos/general/datasets/office-home'
+  path: 'datasets/office-home'
   remap: 'features/office-home/remap.json'
   features: 'features/office-home'
   n_classes: 65
@@ -10,7 +10,7 @@ office-home:
     - product
     - real_world
 office-31:
-  path: '/media/gabriel/Arquivos/general/datasets/office-31'
+  path: 'datasets/office-31'
   features: 'features/office-31'
   n_classes: 31
   image_size: 224
@@ -19,7 +19,7 @@ office-31:
     - DSLR
     - Webcam
 caltech-imagenet:
-  path: '/media/gabriel/Arquivos/general/datasets/caltech_imagenet'
+  path: 'datasets/caltech_imagenet'
   features: 'features/caltech-imagenet'
   n_classes: 84
   image_size: 224
