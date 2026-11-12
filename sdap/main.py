@@ -14,8 +14,9 @@ from process.train_pldca import PLDCA
 from data.incremental import load_incremental_loader
 
 
-def run_table(imbalance_gen: bool = False, disable: bool = False):
-    DATASETS = [
+def run_table(imbalance_gen: bool = False, disable: bool = False, only_disabled=None,
+              fractions=None, datasets=None, file_name=None):
+    DATASETS = datasets or [
         "office-31",
         "office-home",
         "caltech-imagenet",
@@ -36,10 +37,16 @@ def run_table(imbalance_gen: bool = False, disable: bool = False):
             for combo in itertools.combinations(disable_mech, i):
                 disabled.append(list(combo))
 
+    # Optional overrides (used for Source-only under imbalance: --only-disabled cl triplet dist il)
+    if only_disabled:
+        disabled = [list(only_disabled)]
+    if fractions:
+        imbalance_values = list(fractions)
+
     while running:
         try:
             for backbone in FEATURE_SIZE.keys():
-                FILE_NAME = f"all_metrics_{backbone}_disabled.json"
+                FILE_NAME = file_name or f"all_metrics_{backbone}_disabled.json"
 
                 if pathlib.Path(FILE_NAME).is_file():
                     with open(FILE_NAME, "r") as old_result:
@@ -226,10 +233,17 @@ if __name__ == "__main__":
     parser.add_argument("--imbalance", action="store_true", default=False)
     parser.add_argument("--disable", action="store_true", default=False)
     parser.add_argument("--pldca", action="store_true", default=False)
+    parser.add_argument("--only-disabled", nargs="+", default=None,
+                        help="run a single configuration with these modules disabled (e.g. cl triplet dist il)")
+    parser.add_argument("--fractions", nargs="+", type=float, default=None,
+                        help="imbalance fractions to run (overrides the default list)")
+    parser.add_argument("--datasets", nargs="+", default=None,
+                        help="datasets to run (office-31, office-home, caltech-imagenet)")
+    parser.add_argument("--output", default=None, help="results JSON (default: all_metrics_<backbone>_disabled.json)")
     args = parser.parse_args()
 
     if args.table:
-        run_table(args.imbalance, args.disable)
+        run_table(args.imbalance, args.disable, args.only_disabled, args.fractions, args.datasets, args.output)
     elif args.pldca:
         experiment = load_configs_yaml()
         run_pldca_with_projector(experiment)

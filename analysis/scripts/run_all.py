@@ -60,6 +60,11 @@ def main() -> None:
         "pseudo_label_accuracy": {m: {ds: v[ds][:2] for ds in DATASETS} for m, v in psum.items()},
         "pseudo_label_trajectory": {m: {ds: list(map(float, v[ds])) for ds in DATASETS} for m, v in traj.items()},
         "imbalance": {m: {str(f): {ds: v[ds][:2] for ds in DATASETS} for f, v in d.items()} for m, d in isum.items()},
+        # Imbalance accuracy minus balanced Source-only (Source-only was not run under imbalance;
+        # it has no target loss, only target batch-norm statistics).
+        "imbalance_minus_source_only": {m: {str(f): {ds: v[ds][0] - summary["Source-only"][ds][0]
+                                                     for ds in DATASETS} for f, v in d.items()}
+                                        for m, d in isum.items()},
         "ablation": {"-".join(sorted(k)) or "full": {ds: v[ds][:2] for ds in DATASETS} for k, v in asum.items()},
         "reimplementation_mean_diff": reimpl,
         "statistics": tests,

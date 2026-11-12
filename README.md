@@ -70,6 +70,8 @@ python main.py --table                    # SDAP, all tasks, 5 runs
 python main.py --table --disable          # ablation
 python main.py --table --imbalance        # imbalance protocol
 python main.py --pldca                    # PLDCA+AP
+python main.py --table --only-disabled cl triplet dist il \
+    --fractions 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 --output results/source_only_imbalance.json  # Source-only under imbalance
 ```
 
 ### ProCA and PLDCA with ResNet-50 (`ci-uda/`)

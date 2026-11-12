@@ -6,7 +6,7 @@ from functools import lru_cache
 
 import numpy as np
 
-from common import (DATASETS, TASKS, by_task, check_runs, final_accuracy, load, other_metrics,
+from common import (DATA, DATASETS, TASKS, by_task, check_runs, final_accuracy, load, other_metrics,
                     pseudo_label_curve, task_means)
 
 # Display names. "Source-only" is the SDAP ablation with every adaptation module disabled:
@@ -82,18 +82,25 @@ def pseudo_curves(method: str) -> dict:
     return runs(method, pseudo_label_curve)
 
 
+def has_source_only_imbalance() -> bool:
+    return (DATA / "source_only_imbalance.json").is_file()
+
+
 def imbalance(method: str, fraction: float) -> dict:
     """Final accuracy per task under the imbalance protocol at one retained fraction.
 
     PLDCA (ResNet-50) was run under the imbalance protocol only for r < 1.0. With r = 1.0 the
     protocol discards no image, so that point repeats the balanced runs (pldca_resnet50.json),
     produced by the same code, source weights and seeds.
+    Source-only (the SDAP ablation with every module disabled) was run under the imbalance
+    protocol only for r < 1.0 as well; its r = 1.0 point repeats the balanced ablation runs.
     """
-    if method == "PLDCA" and fraction == 1.0:
-        return accuracy("PLDCA")
+    if method in ("PLDCA", "Source-only") and fraction == 1.0:
+        return accuracy(method)
     fname = {"PLDCA": "pldca_resnet50_imbalance.json", "PLDCA+AP": "pldca_ap_imbalance.json",
-             "SDAP": "sdap_imbalance.json"}[method]
-    tag = {"PLDCA": "pldca", "PLDCA+AP": "pldca+ap", "SDAP": "sdap"}[method]
+             "SDAP": "sdap_imbalance.json", "Source-only": "source_only_imbalance.json"}[method]
+    tag = {"PLDCA": "pldca", "PLDCA+AP": "pldca+ap", "SDAP": "sdap",
+           "Source-only": "cl_triplet_dist_il"}[method]
     want = f"{fraction:.1f}_{tag}"
     r = by_task(raw(fname), final_accuracy, keep=lambda i: i["suffix"] == want)
     check_runs(r, label=f"imbalance {method} {fraction}")
@@ -115,5 +122,5 @@ def paired(method_a: str, method_b: str, dataset: str) -> tuple[np.ndarray, np.n
     return np.array([a[t] for t in tasks]), np.array([b[t] for t in tasks])
 
 
-__all__ = ["METHODS", "BACKBONE", "DATASETS", "ABLATION_MODULES", "accuracy", "accuracy_task_means",
+__all__ = ["METHODS", "BACKBONE", "DATASETS", "ABLATION_MODULES", "accuracy", "accuracy_task_means", "has_source_only_imbalance",
            "ablation_accuracy", "other", "pseudo_curves", "imbalance", "beta", "paired"]

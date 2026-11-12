@@ -9,7 +9,7 @@ import numpy as np
 
 from common import (DATA, DATASETS, TABLES, TASKS, bold_pm, pm, summarize, task_means, task_tex, write)
 from results import (ABLATION_MODULES, BACKBONE, ablation_accuracy, accuracy, accuracy_task_means,
-                     imbalance, other, pseudo_curves)
+                     has_source_only_imbalance, imbalance, other, pseudo_curves)
 
 SHORT = {"Office-Home": "Office-Home", "Office-31": "Office-31", "ImageNet-Caltech": "ImageNet-Caltech"}
 
@@ -188,17 +188,22 @@ def table_trajectory(traj: dict) -> None:
 FRACTIONS = [1.0, 0.5, 0.3, 0.2, 0.1]
 
 
+def imbalance_methods() -> list[str]:
+    return (["Source-only"] if has_source_only_imbalance() else []) + ["PLDCA+AP", "SDAP"]
+
+
 def imbalance_summary() -> dict:
-    return {m: {f: summarize(imbalance(m, f)) for f in FRACTIONS} for m in ["PLDCA+AP", "SDAP"]}
+    return {m: {f: summarize(imbalance(m, f)) for f in FRACTIONS} for m in imbalance_methods()}
 
 
 def table_imbalance(isum: dict) -> None:
     rows = []
     for i, ds in enumerate(DATASETS):
-        for j, m in enumerate(["PLDCA+AP", "SDAP"]):
+        methods = list(isum)
+        for j, m in enumerate(methods):
             vals = [isum[m][f][ds][0] for f in FRACTIONS]
             drop = vals[-1] - vals[0]
-            name = f"\\multirow{{2}}{{*}}{{{ds}}}" if j == 0 else ""
+            name = f"\\multirow{{{len(methods)}}}{{*}}{{{ds}}}" if j == 0 else ""
             rows.append(f"{name} & {m} & " + " & ".join(f"${v:.1f}$" for v in vals) + f" & ${drop:+.1f}$ \\\\")
         if i < len(DATASETS) - 1:
             rows.append("\\midrule")

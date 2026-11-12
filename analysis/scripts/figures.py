@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
 from common import FIGURES, ROOT, summarize  # noqa: E402
-from results import beta, imbalance  # noqa: E402
+from results import beta, has_source_only_imbalance, imbalance  # noqa: E402
 
 plt.rcParams.update({
     "font.family": "serif",
@@ -19,7 +19,7 @@ plt.rcParams.update({
     "ps.fonttype": 42,
     "pdf.fonttype": 42,
 })
-COLORS = {"PLDCA": "#4878d0", "PLDCA+AP": "#ee854a", "SDAP": "#6acc64"}
+COLORS = {"PLDCA": "#4878d0", "Source-only": "#8c8c8c", "PLDCA+AP": "#ee854a", "SDAP": "#6acc64"}
 FRACTIONS = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 
 
@@ -36,12 +36,13 @@ def figure_imbalance() -> dict:
     fig, ax = plt.subplots(figsize=(5.0, 3.4))
     x = np.arange(len(FRACTIONS))
     curves = {}
-    for method in ["PLDCA", "PLDCA+AP", "SDAP"]:
+    methods = ["PLDCA"] + (["Source-only"] if has_source_only_imbalance() else []) + ["PLDCA+AP", "SDAP"]
+    for method in methods:
         stats = [summarize(imbalance(method, f))["Office-31"] for f in FRACTIONS]
         curves[method] = (np.array([v[0] for v in stats]), np.array([v[1] for v in stats]))
     # EPS has no transparency: show the spread as error bars, slightly offset per method.
     for k, (method, (mean, std)) in enumerate(curves.items()):
-        ax.errorbar(x + (k - 1) * 0.12, mean, yerr=std, marker="o", ms=4, capsize=2, lw=1.4,
+        ax.errorbar(x + (k - (len(curves) - 1) / 2) * 0.12, mean, yerr=std, marker="o", ms=4, capsize=2, lw=1.4,
                     elinewidth=0.8, color=COLORS[method], label=method)
     ax.set_xticks(x, [f"{f:.1f}" for f in FRACTIONS])
     ax.set_xlabel("Retained fraction $r$ of the non-dominant classes")
