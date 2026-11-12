@@ -40,7 +40,9 @@ Each key of a JSON file is one run, `<source>_<target>_<run>[_<suffix>]`. Each v
 | `sdap_ablation.json` | Ablation; the key suffix lists the **disabled** modules (`il`, `cl`, `triplet`, `dist`) | `sdap/main.py --table --disable` |
 | `sdap_imbalance.json` | SDAP under class imbalance, r = 0.1–1.0 | `sdap/main.py --table --imbalance` |
 | `sdap_beta.json` | β sensitivity, Office-31 | `sdap/process/train.py`, `train(model, experiment, beta, [])` swept over β |
-| `sdap_old_pl.json` | SDAP with the pseudo-labeling of PLDCA | `sdap/process/train_old.py` |
+| `sdap_old_pl.json` | SDAP (batch-level): SDAP with the batch-level shared-class detection and pseudo-labeling of PLDCA | `sdap/process/train_old.py` |
+| `source_only_imbalance.json` | Source-only (all SDAP modules disabled) under imbalance, r = 0.1–0.9 (r = 1.0 is in `sdap_ablation.json`) | `sdap/main.py --table --only-disabled cl triplet dist il --fractions …` |
+| `sdap_batch_level_imbalance.json` | Office-31 under imbalance, r = 0.1–1.0; keys `<r>_<source>_<target>_<run>_old` are SDAP (batch-level), `_new` are SDAP | `sdap/process/train_old.py` and `sdap/process/train.py` with `imbalance_factor = r` |
 | `pldca_ap.json`, `pldca_ap_imbalance.json` | PLDCA+AP, balanced and under imbalance | `sdap/main.py`, `run_pldca_with_projector()` (`imbalance_gen=True` for the imbalance file) |
 | `proca_resnet50.json`, `pldca_resnet50.json` | ProCA and PLDCA, ResNet-50 | `ci-uda/src/experiment/train_proca_pldca_runner.py` |
 | `pldca_resnet50_imbalance.json` | PLDCA, ResNet-50, Office-31, r = 0.1–0.9 (r = 1.0 is `pldca_resnet50.json`) | `train_proca_pldca_runner.py --imbalance` |

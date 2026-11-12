@@ -17,7 +17,7 @@ from statsmodels.stats.multitest import multipletests
 from common import TABLES, TASKS, write
 from results import accuracy_task_means, paired
 
-COMPARED = ["ProCA", "PLDCA", "Source-only", "PLDCA+AP", "SDAP (old PL)"]
+COMPARED = ["ProCA", "PLDCA", "Source-only", "PLDCA+AP", "SDAP (batch-level)"]
 TESTED_DATASETS = ["Office-Home", "Office-31"]
 
 

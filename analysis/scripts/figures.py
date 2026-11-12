@@ -19,7 +19,8 @@ plt.rcParams.update({
     "ps.fonttype": 42,
     "pdf.fonttype": 42,
 })
-COLORS = {"PLDCA": "#4878d0", "Source-only": "#8c8c8c", "PLDCA+AP": "#ee854a", "SDAP": "#6acc64"}
+COLORS = {"PLDCA": "#4878d0", "Source-only": "#8c8c8c", "PLDCA+AP": "#ee854a",
+          "SDAP (batch-level)": "#956cb4", "SDAP": "#6acc64"}
 FRACTIONS = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 
 
@@ -36,7 +37,8 @@ def figure_imbalance() -> dict:
     fig, ax = plt.subplots(figsize=(5.0, 3.4))
     x = np.arange(len(FRACTIONS))
     curves = {}
-    methods = ["PLDCA"] + (["Source-only"] if has_source_only_imbalance() else []) + ["PLDCA+AP", "SDAP"]
+    methods = (["PLDCA"] + (["Source-only"] if has_source_only_imbalance() else [])
+               + ["PLDCA+AP", "SDAP (batch-level)", "SDAP"])
     for method in methods:
         stats = [summarize(imbalance(method, f))["Office-31"] for f in FRACTIONS]
         curves[method] = (np.array([v[0] for v in stats]), np.array([v[1] for v in stats]))

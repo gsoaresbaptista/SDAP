@@ -16,12 +16,12 @@ METHODS = {
     "PLDCA": ("pldca_resnet50.json", None),
     "Source-only": ("sdap_ablation.json", frozenset({"cl", "il", "triplet", "dist"})),
     "PLDCA+AP": ("pldca_ap.json", None),
-    "SDAP (old PL)": ("sdap_old_pl.json", None),
+    "SDAP (batch-level)": ("sdap_old_pl.json", None),
     "SDAP": ("sdap.json", None),
 }
 BACKBONE = {
     "ProCA": "ResNet-50", "PLDCA": "ResNet-50",
-    "Source-only": "DINOv2", "PLDCA+AP": "DINOv2", "SDAP (old PL)": "DINOv2", "SDAP": "DINOv2",
+    "Source-only": "DINOv2", "PLDCA+AP": "DINOv2", "SDAP (batch-level)": "DINOv2", "SDAP": "DINOv2",
 }
 ABLATION_MODULES = ["il", "cl", "triplet", "dist"]
 
@@ -97,6 +97,14 @@ def imbalance(method: str, fraction: float) -> dict:
     """
     if method in ("PLDCA", "Source-only") and fraction == 1.0:
         return accuracy(method)
+    if method == "SDAP (batch-level)":
+        # Office-31 only; keys '<r>_<source>_<target>_<run>_old' (batch-level) and '_new' (SDAP),
+        # both run in the same batch for the thesis. Only the batch-level runs are used here.
+        want_r = f"{fraction:.1f}"
+        r = by_task(raw("sdap_batch_level_imbalance.json"), final_accuracy,
+                    keep=lambda i: i["prefix"] == want_r and i["suffix"] == "old")
+        check_runs(r, label=f"imbalance {method} {fraction}")
+        return r
     fname = {"PLDCA": "pldca_resnet50_imbalance.json", "PLDCA+AP": "pldca_ap_imbalance.json",
              "SDAP": "sdap_imbalance.json", "Source-only": "source_only_imbalance.json"}[method]
     tag = {"PLDCA": "pldca", "PLDCA+AP": "pldca+ap", "SDAP": "sdap",

@@ -69,7 +69,7 @@ Method & Backbone & Office-Home & Office-31 & ImageNet-Caltech \\\\
 
 # ---------------------------------------------------------------- Table: same backbone
 
-SAME_BACKBONE = ["Source-only", "PLDCA+AP", "SDAP (old PL)", "SDAP"]
+SAME_BACKBONE = ["Source-only", "PLDCA+AP", "SDAP (batch-level)", "SDAP"]
 
 
 def table_same_backbone(summary: dict) -> None:
@@ -128,7 +128,7 @@ Method & Metric & Office-Home & Office-31 & ImageNet-Caltech \\\\
 
 # ---------------------------------------------------------------- Table: pseudo-label accuracy
 
-PL_METHODS = ["ProCA", "PLDCA", "PLDCA+AP", "SDAP (old PL)", "SDAP"]
+PL_METHODS = ["ProCA", "PLDCA", "PLDCA+AP", "SDAP (batch-level)", "SDAP"]
 
 
 def pseudo_summary() -> dict:
@@ -159,7 +159,7 @@ Method & Backbone & Office-Home & Office-31 & ImageNet-Caltech \\\\
 def trajectory() -> dict:
     """{method: {dataset: [mean over tasks of the per-increment pseudo-label accuracy]}}."""
     out = {}
-    for m in ["PLDCA", "PLDCA+AP", "SDAP (old PL)", "SDAP"]:
+    for m in ["PLDCA", "PLDCA+AP", "SDAP (batch-level)", "SDAP"]:
         means = task_means(pseudo_curves(m))
         out[m] = {ds: np.mean([means[ds][t] for t in TASKS[ds]], axis=0) for ds in DATASETS}
     return out
@@ -316,7 +316,7 @@ Method & {head} & Average \\\\
 
 # ---------------------------------------------------------------- Appendix: per-task accuracy
 
-PERTASK_METHODS = ["ProCA", "PLDCA", "Source-only", "PLDCA+AP", "SDAP (old PL)", "SDAP"]
+PERTASK_METHODS = ["ProCA", "PLDCA", "Source-only", "PLDCA+AP", "SDAP (batch-level)", "SDAP"]
 
 
 def table_per_task(summary: dict) -> None:
