@@ -42,14 +42,17 @@ def figure_imbalance() -> dict:
     for method in methods:
         stats = [summarize(imbalance(method, f))["Office-31"] for f in FRACTIONS]
         curves[method] = (np.array([v[0] for v in stats]), np.array([v[1] for v in stats]))
-    # EPS has no transparency: show the spread as error bars, slightly offset per method.
-    for k, (method, (mean, std)) in enumerate(curves.items()):
-        ax.errorbar(x + (k - (len(curves) - 1) / 2) * 0.12, mean, yerr=std, marker="o", ms=4, capsize=2, lw=1.4,
-                    elinewidth=0.8, color=COLORS[method], label=method)
+    # Means only: the spread over tasks (8.6 to 24.8 p.p.) hides the curves; the std is kept in the
+    # returned summary. Distinct markers and line styles keep the curves apart in grayscale.
+    style = {"PLDCA": ("s", "-"), "Source-only": ("x", "--"), "PLDCA+AP": ("^", "-"),
+             "SDAP (batch-level)": ("v", "-."), "SDAP": ("o", "-")}
+    for method, (mean, std) in curves.items():
+        marker, ls = style[method]
+        ax.plot(x, mean, marker=marker, ms=4.5, lw=1.5, ls=ls, color=COLORS[method], label=method)
     ax.set_xticks(x, [f"{f:.1f}" for f in FRACTIONS])
     ax.set_xlabel("Retained fraction $r$ of the non-dominant classes")
     ax.set_ylabel("Final accuracy (%)")
-    ax.set_ylim(30, 102)
+    ax.set_ylim(40, 95)
     ax.legend(loc="lower left", frameon=True)
     _save(fig, "imbalance_office31.eps")
     return {k: {"mean": v[0].tolist(), "std": v[1].tolist()} for k, v in curves.items()}
